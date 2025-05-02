@@ -15,6 +15,10 @@
             doSelect();
         }
 
+        function button2Pressed() {
+            dosearch();
+        }
+
         async function doSelect() {
             var sql = 'select * from Tweets order by time desc limit 20';
             var objects = await osql.connect(sql);
@@ -28,13 +32,31 @@
             html = html + '</ul>';
             document.getElementById('result').innerHTML = html;
         }
+
+        async function dosearch() {
+            var search_word = document.getElementById('search').value;
+            var sql = `select * from Tweets where tweet like '%${search_word}%'`;;
+            var search_word_objects = await osql.connect(sql);
+            console.log(search_word_objects);
+            var html = '';
+            html = html + '<ul>';
+            for (var i = 0; i < search_word_objects.length; i++) {
+                var object = search_word_objects[i];
+                html = html + '<li>' + object.name + ',' + object.tweet + ',' + object.time + '</li>';
+            }
+            html = html + '</ul>';
+            document.getElementById('result').innerHTML = html;
+        }
     </script>
 
 </head>
 
 <body>
     <h1>Tweets</h1>
-    <button onclick="button1Pressed()">X</button>
+    <input id="search" type="textfield">
+    <button onclick="button2Pressed()">検索</button>
+    <p></p>
+    <button onclick="button1Pressed()">全表示</button>
     <hr>
     <p id="result">xxxx</p>
 </body>
