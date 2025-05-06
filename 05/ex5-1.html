@@ -23,28 +23,49 @@
             var sql = 'select * from Tweets order by time desc limit 20';
             var objects = await osql.connect(sql);
             console.log(objects);
+
             var html = '';
-            html = html + '<ul>';
-            for (var i = 0; i < objects.length; i++) {
+
+            for (let i = 0; i < objects.length; i++) {
                 var object = objects[i];
-                html = html + '<li>' + object.name + ',' + object.tweet + ',' + object.time + '</li>';
+
+                html = html + '<div style="display: flex">';
+                // 表として表示（名前とID）
+                html = html + '<table border="1" ><tr>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + object.id + '</td>';
+                html = html + '</tr></table>';
+                // tweetと時間は表の外に表示
+                html = html + '-' + object.tweet + '-' + object.time;
+
+                html = html + '</div>';
             }
-            html = html + '</ul>';
             document.getElementById('result').innerHTML = html;
         }
 
+
+
         async function dosearch() {
             var search_word = document.getElementById('search').value;
-            var sql = `select * from Tweets where tweet like '%${search_word}%'`;;
+            //検索した言葉の実参照する
+            var sql = `select * from Tweets where tweet like '%${search_word}%'`;
             var search_word_objects = await osql.connect(sql);
             console.log(search_word_objects);
             var html = '';
-            html = html + '<ul>';
-            for (var i = 0; i < search_word_objects.length; i++) {
+            for (let i = 0; i < search_word_objects.length; i++) {
                 var object = search_word_objects[i];
-                html = html + '<li>' + object.name + ',' + object.tweet + ',' + object.time + '</li>';
+
+                html = html + '<div style="display: flex">';
+                // 表として表示（名前とID）
+                html = html + '<table border="1" ><tr>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + object.id + '</td>';
+                html = html + '</tr></table>';
+                // tweetと時間は表の外に表示
+                html = html + '-' + object.tweet + '-' + object.time;
+
+                html = html + '</div>';
             }
-            html = html + '</ul>';
             document.getElementById('result').innerHTML = html;
         }
     </script>
