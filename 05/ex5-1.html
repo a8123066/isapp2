@@ -26,20 +26,19 @@
 
             var html = '';
 
+            html = html + '<table border="1">';
+            html = html + '<th>ID</th><th>name</th><th>tweet</th><th>time</th><tr>';
+
             for (let i = 0; i < objects.length; i++) {
                 var object = objects[i];
 
-                html = html + '<div style="display: flex">';
-                // 表として表示（名前とID）
-                html = html + '<table border="1" ><tr>';
-                html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + object.id + '</td>';
-                html = html + '</tr></table>';
-                // tweetと時間は表の外に表示
-                html = html + '-' + object.tweet + '-' + object.time;
-
-                html = html + '</div>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + object.tweet + '</td>';
+                html = html + '<td>' + object.time + '</td>';
+                html = html + '</tr>';
             }
+            html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
 
@@ -52,22 +51,23 @@
             var search_word_objects = await osql.connect(sql);
             console.log(search_word_objects);
             var html = '';
+
+            html = html + '<table border="1">';
+            html = html + '<th>ID</th><th>name</th><th>tweet</th><th>time</th><tr>';
             for (let i = 0; i < search_word_objects.length; i++) {
                 var object = search_word_objects[i];
 
-                html = html + '<div style="display: flex">';
-                // 表として表示（名前とID）
-                html = html + '<table border="1" ><tr>';
-                html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + object.id + '</td>';
-                html = html + '</tr></table>';
-                // tweetと時間は表の外に表示
-                html = html + '-' + object.tweet + '-' + object.time;
-
-                html = html + '</div>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + object.tweet + '</td>';
+                html = html + '<td>' + object.time + '</td>';
+                html = html + '</tr>';
             }
+            html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
+
+
     </script>
 
 </head>
