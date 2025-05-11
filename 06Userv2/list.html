@@ -14,10 +14,15 @@
         $(document).ready(function () {
             execSelect();
         });
+        var spl;
+        var objects;
+        var objects_l;
+        var old_objects_l
 
         async function execSelect() {
-            var sql = 'select * from Users';
-            var objects = await osql.connect(sql);
+            //userリストを表示
+            sql = 'select * from Users';
+            objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
             html = html + '<table border="1">';
@@ -30,7 +35,31 @@
                 html = html + '</tr>';
             }
             html = html + '</table>';
+            //成功判定のためにリストの長さを代入する
+            objects_l = objects.length;
             document.getElementById('result').innerHTML = html;
+            console.log(objects_l);
+        }
+
+        async function delete_data() {
+            //削除後、objects_lが新しい長さに置き換わるため、古いものを代入しておく
+            old_objects_l = objects_l;
+            var d_id = document.getElementById('tf1').value;
+            var delete_sql = `delete from Users where id="${d_id}"`;
+            var objects_d = await osql.connect(delete_sql);
+            console.log(objects_l);
+        }
+        async function button1Pressed() {
+            await delete_data();
+            await execSelect();
+            alert();
+        }
+        function alert() {
+            if (objects_l == old_objects_l) {
+                document.getElementById('result_d').innerHTML = '失敗';
+            } else {
+                document.getElementById('result_d').innerHTML = '成功';
+            }
         }
     </script>
 
@@ -38,7 +67,9 @@
 
 <body>
     <h1>Users</h1>
+    ID:<input id="tf1" value="" type="textfield"><button onclick="button1Pressed()">削除</button>
     <p id="result">xxxx</p>
+    <p id="result_d"></p>
 </body>
 
 </html>
