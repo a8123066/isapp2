@@ -32,6 +32,7 @@
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + '<a href="update.html?userid=' + object.id + '">変更</a>' + '</td>';
+                html = html + '<td>' + '<button onclick="buttondeletePressed(' + object.id + ')">削除</button></td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
@@ -40,9 +41,37 @@
             document.getElementById('result').innerHTML = html;
             console.log(objects_l);
         }
+        function confirmdelete(id) {
+            //削除するときの最終確認
+            var wc = window.confirm("本当に削除しますか？");
+            if (wc == true) {
+                deleteuserid(id);
+            } else {
+                old_objects_l = objects_l;
+            }
+        }
+
+        async function buttondeletePressed(id) {
+            await confirmdelete(id);
+            await execSelect();
+            alert();
+
+        }
+
+        async function deleteuserid(id) {
+            //idのデータを削除する
+            //削除後のobjects_lの長さに変わるため、置き換える
+            old_objects_l = objects_l;
+            var delete_sql = `delete from Users where id="${id}"`;
+            var objects_d = await osql.connect(delete_sql);
+            console.log(objects_l);
+            await execSelect();
+            alert();
+
+        }
 
         async function delete_data() {
-            //削除後、objects_lが新しい長さに置き換わるため、古いものを代入しておく
+            //削除後のobjects_lの長さに変わるため、置き換える
             old_objects_l = objects_l;
             var d_id = document.getElementById('tf1').value;
             var delete_sql = `delete from Users where id="${d_id}"`;
@@ -56,9 +85,9 @@
         }
         function alert() {
             if (objects_l == old_objects_l) {
-                document.getElementById('result_d').innerHTML = '失敗';
+                document.getElementById('result_d').innerHTML = 'データがないか、削除がキャンセルされました';
             } else {
-                document.getElementById('result_d').innerHTML = '成功';
+                document.getElementById('result_d').innerHTML = '削除しました';
             }
         }
     </script>
