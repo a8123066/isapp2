@@ -37,6 +37,9 @@
             doInsert();
         }
 
+        function button4Pressed() {
+            follow();
+        }
         async function doInsert() {
             var userid = document.getElementById('tf1').value;
             var tweet = document.getElementById('tf2').value;
@@ -101,16 +104,18 @@
             var userid = osql.getParam('userid');
 
             document.getElementById('tf1').value = userid;
-            var sql = `select * from Follows`;
-            var search_word_objects = await osql.connect(sql);
-            console.log(search_word_objects);
+
 
         }
 
         async function follow() {
-            var from_id = osql.getParam('userid');
-            var to_id =
-
+            var from_id = document.getElementById('tf1').value;
+            var to_id = document.getElementById('tf3').value;
+            var sql = `insert into Follows (fromid,toid) values ("${from_id}","${to_id}")`;
+            var objects = await osql.connect(sql);
+            var write_follow = `select * from Follows`;
+            var followers = await osql.connect(write_follow);
+            console.log(followers)
         }
 
     </script>
@@ -123,8 +128,10 @@
     名前:<input id="tf1" value="名無し" type="textfield">
     <br>
     tweet:<input id="tf2" type="textfield">
-    follow:<input id="tf3" type="textfield">
     <button onclick="button3Pressed()">tweet</button>
+    follow:<input id="tf3" type="textfield">
+    <button onclick="button4Pressed()">follow</button>
+
     <br>
     <hr>
     <input id="search" type="textfield">
