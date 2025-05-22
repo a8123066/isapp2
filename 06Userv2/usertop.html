@@ -19,6 +19,7 @@
             console.log(username);
             document.getElementById('welcome').innerHTML = `ようこそ${username}さん`;
             document.getElementById('myid').href = `http://127.0.0.1:5500/06Userv2/update.html?userid=${userid}`;
+            document.getElementById('tweet').href = `http://127.0.0.1:5500/06Userv2/tweet.html?userid=${userid}`
         }
 
     </script>
@@ -29,7 +30,8 @@
     <h1>ユーザトップ</h1>
     <p id="welcome"></p>
     <hr>
-    <p>
+    <p><a id="tweet" href="">Tweet</a></p>
+    <hr>
     <p><a id="myid" href="">ユーザー情報変更</a></p>
 
 </body>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/osql.js"></script>
+
+    <script>
+
+        osql.requireLogin();//すべてのページに入れる．google認証をして，osql.connect()や，osql.getMe()を使えるようにしてくれる．
+        var int;
+        $(document).ready(function () {
+
+            doSelect();
+            write_name();
+
+            int = setInterval(doSelect, 2000);
+        });
+
+
+
+        function button1Pressed() {
+            int = setInterval(doSelect, 2000);
+            doSelect();
+
+        }
+
+        function button2Pressed() {
+            clearInterval(int);
+            dosearch();
+        }
+
+        function button3Pressed() {
+            doInsert();
+        }
+
+        async function doInsert() {
+            var userid = document.getElementById('tf1').value;
+            var tweet = document.getElementById('tf2').value;
+
+            var sql = `insert into Tweets (name, tweet, time) values("${userid}", "${tweet}", now());`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+
+            document.getElementById('result').innerHTML = "tweetしました";
+            document.getElementById('tf2').value = "";
+
+        }
+        async function doSelect() {
+            var sql = 'select * from Tweets order by time desc limit 20';
+            var objects = await osql.connect(sql);
+            console.log(objects);
+
+            var html = '';
+
+            html = html + '<table border="1">';
+            html = html + '<th>ID</th><th>name</th><th>tweet</th><th>time</th><tr>';
+
+            for (let i = 0; i < objects.length; i++) {
+                var object = objects[i];
+
+                html = html + '<td>' + object.id + '</td>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + object.tweet + '</td>';
+                html = html + '<td>' + object.time + '</td>';
+                html = html + '</tr>';
+            }
+            html = html + '</table>';
+            document.getElementById('result').innerHTML = html;
+        }
+
+
+
+        async function dosearch() {
+            var search_word = document.getElementById('search').value;
+            //検索した言葉の実参照する
+            var sql = `select * from Tweets where tweet like '%${search_word}%'`;
+            var search_word_objects = await osql.connect(sql);
+            console.log(search_word_objects);
+            var html = '';
+
+            html = html + '<table border="1">';
+            html = html + '<th>ID</th><th>name</th><th>tweet</th><th>time</th><tr>';
+            for (let i = 0; i < search_word_objects.length; i++) {
+                var object = search_word_objects[i];
+
+                html = html + '<td>' + object.id + '</td>';
+                html = html + '<td>' + object.name + '</td>';
+                html = html + '<td>' + object.tweet + '</td>';
+                html = html + '<td>' + object.time + '</td>';
+                html = html + '</tr>';
+            }
+            html = html + '</table>';
+            document.getElementById('result').innerHTML = html;
+        }
+
+        async function write_name() {
+            var userid = osql.getParam('userid');
+
+            document.getElementById('tf1').value = userid;
+            var sql = `select * from Follows`;
+            var search_word_objects = await osql.connect(sql);
+            console.log(search_word_objects);
+
+        }
+
+        async function follow() {
+            var from_id = osql.getParam('userid');
+            var to_id =
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <h1>Tweets</h1>
+    <br>
+    名前:<input id="tf1" value="名無し" type="textfield">
+    <br>
+    tweet:<input id="tf2" type="textfield">
+    follow:<input id="tf3" type="textfield">
+    <button onclick="button3Pressed()">tweet</button>
+    <br>
+    <hr>
+    <input id="search" type="textfield">
+    <button onclick="button2Pressed()">検索</button>
+    <p></p>
+    <button onclick="button1Pressed()">全表示</button>
+    <hr>
+    <p id="result"></p>
+
+</body>
+
+</html>
